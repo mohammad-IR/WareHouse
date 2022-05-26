@@ -1,0 +1,61 @@
+﻿@model EditRawMaterialViewModel
+@if (TempData["error"] != null)
+{
+    <div class="row justify-content-center align-content-center">
+        <div class="col-4 border border-danger bg-light p-3 rounded rounded-2">
+            <div asp-validation-summary="All"></div>
+        </div>
+    </div>
+}
+<div class="row justify-content-center align-content-center">
+    <div class="col-6">
+        <form method="post" asp-action="Edit">
+            <input asp-for="RawMaterial.Id" hidden />
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.PartNumber"></label>
+            <input  class="form-control" asp-for="RawMaterial.PartNumber" >
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.IdMaterial"></label>
+            <input class="form-control" asp-for="RawMaterial.IdMaterial" >
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.NumberOfMaterial"></label>
+            <input  class="form-control" asp-for="RawMaterial.NumberOfMaterial" >
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.Limit"></label>
+            <input  class="form-control" asp-for="RawMaterial.Limit" >
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.DateOfBuy"></label>
+            <input  class="form-control" asp-for="RawMaterial.DateOfBuy" >
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.SupplierId"></label>
+            <select class="form-select" asp-for="RawMaterial.SupplierId" aria-label="Default select example">
+
+              @foreach(var item in Model.Suppliers){
+                        @if(item.Value.Equals(Model.RawMaterial.SupplierId))
+                        {
+                        <option selected value="@item.Value">@item.Text</option>
+                        }
+                        else{
+                        <option value="@item.Value">@item.Text</option>
+              
+                        }
+              }
+            </select>
+          </div>
+          <input asp-for="RawMaterial.Supplier.Id" value="RawMaterial.SupplierId" hidden  />
+
+          <button type="submit" class="btn btn-primary">ارسال</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}

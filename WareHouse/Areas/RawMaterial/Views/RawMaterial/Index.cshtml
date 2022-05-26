@@ -1,0 +1,66 @@
+﻿
+<div class="row">
+    <div class="col-12 justify-content-center justify-content-lg-end">
+        <a class="btn btn-outline-primary px-5 py-2 my-3" asp-action="create">ایجاد</a>
+    </div>
+</div>
+<div class="row justify-content-center">
+<div class="col-12">
+
+@if(ViewBag.rawMaterials != null){
+
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">عدد شناسایی محصول</th>
+          <th scope="col">شناسه محصول</th>
+          <th scope="col">قیمت ریالی</th>
+          <th scope="col">قیمت ارزی</th>
+          <th scope="col">تعداد</th>
+          <th scope="col">محدوده</th>
+          <th scope="col">تامین کننده</th>
+          <th scope="col">تاریخ خرید</th>
+          <th scope="col">اعمال تغیرات</th>
+        </tr>
+      </thead>
+      <tbody>
+          @foreach(var material in ViewBag.rawMaterials){
+            <tr>
+              <td>@material.PartNumber</td>
+              <td>@material.IdMaterial</td>
+              <td>@material.NumberOfMaterial</td>
+              <td>
+                  @material.Limit
+              </td>
+              <td>
+                  @material.Supplier.FirstName @material.Supplier.LastName
+              </td>
+              <td>
+                  @material.DateOfBuy شمسی
+              </td>
+              <td>
+                  <a class="btn btn-outline-danger mx-1"   onclick="return confirm('مطمئن از حذف هستید?')" asp-action="Delete"  asp-route-Id="@material.Id">پاک کردن</a>
+                  <a class="btn btn-outline-success" asp-action="Edit"  asp-route-Id="@material.Id">تغییر</a>
+              </td>
+
+              <td>
+                  @material.PriceIR
+              </td>
+
+              <td>
+                  @material.CurrencyPrice.RialValue - @material.CurrencyPrice.Type 
+              </td>
+
+            </tr>
+          }
+      </tbody>
+    </table>
+
+
+}
+else{
+    <h1 class="text-danger text-center">موجود نیست</h1>
+}
+</div>
+</div>

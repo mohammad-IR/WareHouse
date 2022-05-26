@@ -1,0 +1,115 @@
+﻿@using WareHouse.Models
+@model EditRawMaterialViewModel
+
+<script type="text/javascript">
+    let listCurrencyPrice = {};
+</script>
+
+    <div class="row justify-content-center align-content-center mt-3">
+        <div class="col-4 bg-light p-3 rounded rounded-2">
+            <div asp-validation-summary="All"></div>
+            <p id="warningForPrice"  class="text-danger text-end"></p>
+        </div>
+    </div>
+<div class="row justify-content-center align-content-center">
+    <div class="col-6">
+        <form asp-action="Create" method="post">
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.PartNumber"></label>
+            <input  class="form-control" asp-for="RawMaterial.PartNumber" />
+          </div>
+          
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.IdMaterial"></label>
+            <input  class="form-control" asp-for="RawMaterial.IdMaterial" />
+          </div>
+          
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.NumberOfMaterial"></label>
+            <input  class="form-control" asp-for="RawMaterial.NumberOfMaterial" />
+          </div>
+
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.Limit"></label>
+            <input  class="form-control" asp-for="RawMaterial.Limit" />
+          </div>
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.DateOfBuy"></label>
+            <input  class="form-control"  asp-for="RawMaterial.DateOfBuy" />
+          </div>
+
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.CurrencyPriceId">ارز مورد نظر</label>
+            <select class="form-select" onchange="changeCurrency(this)" asp-for="RawMaterial.CurrencyPriceId" aria-label="Default select example">
+                <option selected >قیمت ارزی را وارد کنید</option>
+              @foreach(var item in Model.Currenies){
+                   <option value="@item.Id">@item.Type</option>
+                   <script type="text/javascript">
+                        listCurrencyPrice["@item.Id"] = @item.RialValue;
+                   </script>
+              }
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.PriceIR"></label>
+            <input  class="form-control" value="0" oninput="CalculatePriceCurrency(this)" asp-for="RawMaterial.PriceIR" />
+          </div>
+
+          
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.CurrencyPrice"></label>
+            <input  class="form-control" value="0" oninput="CalculatePriceIR(this)" asp-for="RawMaterial.CurrencyPrice" />
+          </div>
+
+          <div class="mb-3">
+            <label  class="form-label" asp-for="RawMaterial.SupplierId"></label>
+            <select class="form-select" asp-for="RawMaterial.SupplierId" aria-label="Default select example">
+                <option selected >تامین کننده را وارد کنید</option>
+              @foreach(var item in Model.Suppliers){
+                   <option value="@item.Value">@item.Text</option>
+              }
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">ایجاد</button>     
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    var rawMaterial_CurrencyPriceId = document.getElementById("RawMaterial_CurrencyPriceId");
+    var rawMaterial_PriceIR = document.getElementById("RawMaterial_PriceIR");
+    var rawMaterial_CurrencyPrice = document.getElementById("RawMaterial_CurrencyPrice");
+    var warningForPrice = document.getElementById("warningForPrice");
+     
+    function CalculatePriceCurrency(item){
+        rawMaterial_CurrencyPrice.value= parseFloat(listCurrencyPrice[rawMaterial_CurrencyPriceId.value]) / Number(rawMaterial_PriceIR.value);
+        if(rawMaterial_CurrencyPrice.value === NaN || rawMaterial_CurrencyPrice.value === "" || rawMaterial_CurrencyPrice.value === "infinity"){
+            warningForPrice.innerHTML = "ارز مورد نظر را انتخاب کنید";
+        } 
+        else {
+            warningForPrice.innerHTML = "";
+        }
+    }
+
+    function CalculatePriceIR(item){
+        rawMaterial_PriceIR.value= Number(listCurrencyPrice[rawMaterial_CurrencyPriceId.value]) * Number(rawMaterial_CurrencyPrice.value);
+        if(rawMaterial_PriceIR.value === NaN || rawMaterial_PriceIR.value === "" || rawMaterial_PriceIR.value === "infinity"){
+            warningForPrice.innerHTML = "ارز مورد نظر را انتخاب کنید";
+        } 
+        else {
+            warningForPrice.innerHTML = "";
+        }
+        
+    }
+
+    function changeCurrency(item){
+        //console.log(listCurrencyPrice, rawMaterial_CurrencyPrice, rawMaterial_CurrencyPriceId, rawMaterial_PriceIR);
+        rawMaterial_CurrencyPrice.value= parseFloat( Number(rawMaterial_PriceIR.value) / Number(listCurrencyPrice[rawMaterial_CurrencyPriceId.value]));
+    }
+</script>
+
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
